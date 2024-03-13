@@ -1,10 +1,18 @@
 const ffmpegPath = require('ffmpeg-static');
 const ffmpeg = require('fluent-ffmpeg');
+const getFileDirectory = require('./system_dialog_prompter');
 
-try {
-    const inputFilePath = './input/video_with_audio.mp4'; // Replace with your input file path
+// const inputFilePath = './input/video_with_audio.mp4'; // Replace with your input file path
+getFileDirectory().then((dir) => {
+    const inputFilePath = dir;
+    console.log("dir", dir);
     const outputFilePath = './output/video_without_audio.mp4'; // Replace with your output file path
 
+    handleRemovingAudio(inputFilePath, outputFilePath);
+});
+
+
+function handleRemovingAudio(inputFilePath, outputFilePath) {
     const ffmpegProcess = ffmpeg(inputFilePath)
         .setFfmpegPath(ffmpegPath)
         .noAudio(); // Remove audio
@@ -19,6 +27,4 @@ try {
         .output(outputFilePath)
         .videoCodec('copy')
         .run();
-} catch (e) {
-    console.log("Try Catch Error", e);
 }
