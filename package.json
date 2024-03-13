@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "crop": "node crop.js",
-    "change_res": "node resolutionChanger.js"
+    "change_res": "node resolutionChanger.js",
+    "remove_audio": "node removeAudio.js"
   },
   "author": "",
   "license": "ISC",
