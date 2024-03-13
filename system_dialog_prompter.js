@@ -7,18 +7,18 @@ const DIALOG_TYPES = {
     save_file: 'save-file',
 };
 
-function getFileDirectory() {
+
+function getFileDirectory(cb) {
     const config = { type: DIALOG_TYPES.open_file };
 
-    return new Promise((resolve, reject) => {
-        dialog(config)
-            .then(dir => {
-                //Seems the result from dialog resturn an array by default
-                //when handling a single file select
-                resolve(dir[0]);
-            })
-            .catch(err => console.log(GetErrorReasonMessage(err)));
-    });
+    dialog(config)
+        .then(dir => {
+            //Seems the result from dialog resturn an array by default
+            //when handling a single file select
+            cb(dir[0]);
+        })
+        .catch(err => console.log(GetErrorReasonMessage(err)));
+
 }
 
 

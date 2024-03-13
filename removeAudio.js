@@ -3,14 +3,11 @@ const ffmpeg = require('fluent-ffmpeg');
 const getFileDirectory = require('./system_dialog_prompter');
 
 // const inputFilePath = './input/video_with_audio.mp4'; // Replace with your input file path
-getFileDirectory().then((dir) => {
-    const inputFilePath = dir;
-    console.log("dir", dir);
+getFileDirectory((inputFilePath) => {
     const outputFilePath = './output/video_without_audio.mp4'; // Replace with your output file path
 
     handleRemovingAudio(inputFilePath, outputFilePath);
 });
-
 
 function handleRemovingAudio(inputFilePath, outputFilePath) {
     const ffmpegProcess = ffmpeg(inputFilePath)
