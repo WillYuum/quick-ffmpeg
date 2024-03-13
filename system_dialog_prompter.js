@@ -21,6 +21,17 @@ function getFileDirectory(cb) {
 
 }
 
+function getSaveDir(cb) {
+    const config = { type: DIALOG_TYPES.save_file };
+
+    dialog(config)
+        .then(dir => {
+            cb(dir[0]);
+        })
+        .catch(err => console.log(GetErrorReasonMessage(err)));
+}
+
+
 
 function GetErrorReasonMessage(err) {
     const errorFromClosingDialog = err.toString().includes('Nothing selected');
@@ -31,8 +42,6 @@ function GetErrorReasonMessage(err) {
         default:
             return err;
     }
-
-
 }
 
-module.exports = getFileDirectory;
+module.exports = { getFileDirectory, getSaveDir };
