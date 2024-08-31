@@ -13,4 +13,5 @@
 
  ## To Crop:
  Run `npm run crop [Number to crop from] [Number to crop to]`
- where [Number to crop from] & [Number to crop to] are in this format 00:00
+ where [Number to crop from] & [Number to crop to] are in this format 0
+ 0:00
