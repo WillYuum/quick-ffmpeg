@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "crop": "node crop.js",
     "change_res": "node resolutionChanger.js",
-    "remove_audio": "node removeAudio.js"
+    "remove_audio": "node removeAudio.js",
+    "decrease_frame_rate": "node decreaseFrameAmount.js"
   },
   "author": "",
   "license": "ISC",
