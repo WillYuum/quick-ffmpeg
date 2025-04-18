@@ -63,7 +63,8 @@ function SetPresentationStamp(inputFilePath, speedRatio, onDone = () => { }) {
     const ffmpegProcess = ffmpeg(inputFilePath)
         .setFfmpegPath(ffmpegPath)
         .videoFilters(`setpts=${1 / speedRatio}*PTS`)  // Slow down video: PTS should be scaled by the inverse of the speed ratio
-        .audioFilters([`atempo=${1 / speedRatio}`])  // Slow down audio: atempo should be scaled by the inverse of the speed ratio
+        // .audioFilters([`atempo=${1 / speedRatio}`])  // Slow down audio: atempo should be scaled by the inverse of the speed ratio
+        .noAudio()
         .outputOptions([
             '-crf 23',
             '-preset medium',
