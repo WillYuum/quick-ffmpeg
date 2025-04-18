@@ -9,7 +9,8 @@
     "change_res": "node resolutionChanger.js",
     "remove_audio": "node removeAudio.js",
     "decrease_frame_rate": "node decreaseFrameAmount.js",
-    "slow_down": "node slowDownVideo.js"
+    "slow_down": "node slowDownVideo.js",
+    "slow_down_with_interpolation": "node slowDownVideo.js --with-mInterpolation"
   },
   "author": "",
   "license": "ISC",

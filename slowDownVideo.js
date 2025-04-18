@@ -35,6 +35,7 @@ function processFilesSequentially(filePaths, index = 0) {
         console.error("Error processing file:", err);
     });
 }
+
 async function SlowDownVideo(inputFilePath) {
     console.log("Processing...", inputFilePath);
 
@@ -48,22 +49,39 @@ async function SlowDownVideo(inputFilePath) {
     console.log(`Original duration: ${originalDuration}s`);
     console.log(`New duration: ${newDuration}s (speed ratio: ${slowDownSpeed})`);
 
+    const with_minterpolate = process.argv.includes('--with-mInterpolation');
+
     return new Promise((resolve, reject) => {
-        SetPresentationStamp(inputFilePath, slowDownSpeed, () => {
+        SetPresentationStamp(inputFilePath, slowDownSpeed, with_minterpolate, () => {
             console.log("Finished processing...", inputFilePath);
             resolve();
         });
     });
 }
 
-function SetPresentationStamp(inputFilePath, speedRatio, onDone = () => { }) {
-    const newOutputFilePath = `${OUTPUT_PATH}${inputFilePath.split('/').pop().split('.').slice(0, -1).join('.')}_slow.mp4`;
+function SetPresentationStamp(inputFilePath, speedRatio, withMinterpolate, onDone = () => { }) {
 
-    // Modify video playback speed and audio tempo according to the speed ratio
+    let videoFilters = `setpts=${1 / speedRatio}*PTS`;  // Slow down video: PTS should be scaled by the inverse of the speed ratio
+
+    if (withMinterpolate) {
+        // Apply the minterpolate filter if the parameter is true
+        videoFilters = `minterpolate=fps=60:mi_mode=mci:mc_mode=aobmc:vsbmc=1,${videoFilters}`;
+
+
+        console.log("Using motion interpolation for smoother playback.");
+    } else {
+        console.log("No motion interpolation applied.");
+    }
+
+    const suffix = withMinterpolate ? '_slow_interp.mp4' : '_slow.mp4';
+    const newOutputFilePath = `${OUTPUT_PATH}${inputFilePath.split('/').pop().split('.').slice(0, -1).join('.')}${suffix}`;
+
+
+
+    // Modify video playback speed and apply motion interpolation (if needed)
     const ffmpegProcess = ffmpeg(inputFilePath)
         .setFfmpegPath(ffmpegPath)
-        .videoFilters(`setpts=${1 / speedRatio}*PTS`)  // Slow down video: PTS should be scaled by the inverse of the speed ratio
-        // .audioFilters([`atempo=${1 / speedRatio}`])  // Slow down audio: atempo should be scaled by the inverse of the speed ratio
+        .videoFilters(videoFilters)
         .noAudio()
         .outputOptions([
             '-crf 23',
@@ -73,6 +91,9 @@ function SetPresentationStamp(inputFilePath, speedRatio, onDone = () => { }) {
         .output(newOutputFilePath)
         .on('progress', (progress) => {
             console.log('... frames: ' + progress.frames);
+            //log current os time
+            const currentTime = new Date().toLocaleTimeString();
+            console.log(`Current time: ${currentTime}`);
         })
         .on('end', () => {
             console.log(`Finished processing ${inputFilePath}`);
