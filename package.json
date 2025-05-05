@@ -10,7 +10,8 @@
     "remove_audio": "node removeAudio.js",
     "decrease_frame_rate": "node decreaseFrameAmount.js",
     "slow_down": "node slowDownVideo.js",
-    "slow_down_with_interpolation": "node slowDownVideo.js --with-mInterpolation"
+    "slow_down_with_interpolation": "node slowDownVideo.js --with-mInterpolation",
+    "reduceVideoBitrate": "node reduceVideoBitrate.js"
   },
   "author": "",
   "license": "ISC",
