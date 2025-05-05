@@ -9,9 +9,9 @@ getFileDirectory((filePath) => {
 
 function handleCrop(filePath) {
     try {
-        const exportType = process.argv[4] || 'mp4';
+        const fileName = filePath.split('/').pop();
         const inputFilePath = filePath;
-        const outputFilePath = `./output/cropped_movie.${exportType}`;
+        const outputFilePath = `./output/${fileName}`;
 
         const startTime = prompt('Enter the start time (HH:MM:SS): ');
         const endTime = prompt('Enter the end time (HH:MM:SS) [Leave empty to cut till end]: ');
