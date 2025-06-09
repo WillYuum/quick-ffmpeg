@@ -1,6 +1,6 @@
 const ffmpegPath = require('ffmpeg-static');
 const ffmpeg = require('fluent-ffmpeg');
-const { getFileDirectory } = require('./system_dialog_prompter');
+const { getFileDirectory } = require('./utils/system_dialog_prompter');
 const prompt = require('prompt-sync')();
 
 const ffprobePath = require('ffprobe-static').path;
@@ -27,6 +27,8 @@ function reduceVideoBitrate(filePath) {
             }
 
             const originalBitrate = metadata.format.bit_rate;
+            console.log(`Original bitrate: ${originalBitrate}`);
+
             if (!originalBitrate) {
                 console.log('Could not determine original bitrate.');
                 return;
