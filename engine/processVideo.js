@@ -1,10 +1,9 @@
 const ffmpeg = require('fluent-ffmpeg');
 const ffmpegPath = require('ffmpeg-static');
 const actionHandlers = require('../actions');
-
 const errorHandler = require('../utils/errorHandler');
 
-function processVideo(instruction) {
+async function processVideo(instruction) {
     let command = ffmpeg(instruction.input);
 
     let crashed = false;
@@ -15,9 +14,15 @@ function processVideo(instruction) {
             errorHandler.handleUnknownAction(action);
             break;
         }
-        command = handler(command, action);
-    }
 
+        try {
+            command = await handler(command, action);
+        } catch (err) {
+            crashed = true;
+            errorHandler.handleActionError?.(action, err);
+            break;
+        }
+    }
 
     const noActions = instruction.actions.length === 0;
     if (noActions) {
