@@ -4,15 +4,7 @@
   "description": "",
   "main": "",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "vidtweak": "node ./cli/index.js",
-    "crop": "node crop.js",
-    "change_res": "node resolutionChanger.js",
-    "remove_audio": "node removeAudio.js",
-    "decrease_frame_rate": "node decreaseFrameAmount.js",
-    "slow_down": "node slowDownVideo.js",
-    "slow_down_with_interpolation": "node slowDownVideo.js --with-mInterpolation",
-    "reduceVideoBitrate": "node reduceVideoBitrate.js"
+    "vidtweak": "node ./cli/index.js"
   },
   "author": "",
   "license": "ISC",
