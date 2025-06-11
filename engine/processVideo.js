@@ -6,8 +6,15 @@ const errorHandler = require('../utils/errorHandler');
 async function processVideo(instruction) {
     let command = ffmpeg(instruction.input);
 
+    const inputFilePath = instruction.input;
+
+    //get current input
+    console.log('NANI:', inputFilePath);
+
     let crashed = false;
     for (const action of instruction.actions) {
+        // const objectValues = Object.values(instruction);
+        // console.log('Action values:', objectValues);
         const handler = actionHandlers[action.type];
         if (!handler) {
             crashed = true;
@@ -16,10 +23,11 @@ async function processVideo(instruction) {
         }
 
         try {
-            command = await handler(command, action);
+            command = await handler(command, action, inputFilePath);
         } catch (err) {
             crashed = true;
             errorHandler.handleActionError?.(action, err);
+            console.error(`Logging error ${err}`);
             break;
         }
     }

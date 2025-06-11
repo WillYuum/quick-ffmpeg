@@ -4,9 +4,11 @@ const systemDialog = require('../utils/system_dialog_prompter');
 const processVideo = require('../engine/processVideo');
 const fs = require('fs');
 
-const configPath = './data/crop_bitrate_test.json';
+const configPath = './data/slowdown_test.json';
 
 systemDialog.getFileDirectory((filePath) => {
+    console.log("Selected file path:", filePath);
+
     // Read config
     const config = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
 

@@ -1,6 +1,6 @@
 const ffprobePath = require('ffprobe-static').path;
 
-function reduceVideoBitrate(command, action) {
+function reduceVideoBitrate(command, action, inputFilePath) {
     return new Promise((resolve, reject) => {
         command.setFfprobePath(ffprobePath);
 

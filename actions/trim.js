@@ -1,5 +1,5 @@
 // actions/trim.js
-function trim(command, action) {
+function trim(command, action, inputFilePath) {
     if (!action.startTime || !action.endTime) {
         console.warn('⚠ Missing startTime or endTime for trim action');
         return command;
