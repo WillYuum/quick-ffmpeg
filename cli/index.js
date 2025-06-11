@@ -4,7 +4,7 @@ const systemDialog = require('../utils/system_dialog_prompter');
 const processVideo = require('../engine/processVideo');
 const fs = require('fs');
 
-const configPath = './data/slowdown_test.json';
+const configPath = './data/change_res_test.json';
 
 systemDialog.getFileDirectory((filePath) => {
     console.log("Selected file path:", filePath);

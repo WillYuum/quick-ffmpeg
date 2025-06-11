@@ -1,0 +1,11 @@
+{
+  "input": "C:/Users/liams/Desktop/slow_me_down.mp4",
+  "output": "output/cropped_output.mp4",
+  "actions": [
+    {
+      "type": "changeResolution",
+      "width": 1080,
+      "height": 720
+    }
+  ]
+}
