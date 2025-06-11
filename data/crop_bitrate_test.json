@@ -1,0 +1,10 @@
+{
+  "input": "C:/Users/liams/Desktop/slow_me_down.mp4",
+  "output": "output/cropped_output.mp4",
+  "actions": [
+    {
+      "type": "reduceVideoBitrate",
+      "reductionPercentage": 50
+    }
+  ]
+}
