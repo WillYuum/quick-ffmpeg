@@ -8,9 +8,6 @@ async function processVideo(instruction) {
 
     const inputFilePath = instruction.input;
 
-    //get current input
-    console.log('NANI:', inputFilePath);
-
     let crashed = false;
     for (const action of instruction.actions) {
         // const objectValues = Object.values(instruction);
@@ -43,19 +40,27 @@ async function processVideo(instruction) {
         return;
     }
 
-    command
-        .setFfmpegPath(ffmpegPath)
-        .output(instruction.output)
-        .on('end', () => console.log('✅ Done processing.'))
-        .on('progress', progress => {
-            if (progress.percent) {
-                console.log(`📊 Progress: ${progress.percent.toFixed(2)}%`);
-            } else {
-                console.log(`📊 Processing: ${progress.frames} frames processed`);
-            }
-        })
-        .on('error', err => console.error('❌ FFmpeg Error:', err.message))
-        .run();
-}
 
+    return new Promise((resolve, reject) => {
+        command
+            .setFfmpegPath(ffmpegPath)
+            .output(instruction.output)
+            .on('end', () => {
+                console.log('✅ Done processing.');
+                resolve();
+            })
+            .on('progress', progress => {
+                if (progress.percent) {
+                    console.log(`📊 Progress: ${progress.percent.toFixed(2)}%`);
+                } else {
+                    console.log(`📊 Processing: ${progress.frames} frames processed`);
+                }
+            })
+            .on('error', err => {
+                console.error('❌ FFmpeg Error:', err.message);
+                reject(err);
+            })
+            .run();
+    });
+}
 module.exports = processVideo;
