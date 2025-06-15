@@ -1,3 +1,10 @@
 node_modules
 input
 output
+
+
+# Ignore all JSON files recursively
+data/**/*.json
+
+# But NOT the ones in test_data folder
+!data/test_data/*.json
