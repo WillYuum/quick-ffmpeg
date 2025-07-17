@@ -1,0 +1,14 @@
+{
+    "input": "C:/Users/liams/Desktop/slow_me_down.mp4",
+    "actions": [
+        {
+            "type": "reduceVideoBitrate",
+            "reductionPercentage": 75
+        },
+        {
+            "type": "changeResolution",
+            "width": 1920,
+            "height": 1080
+        }
+    ]
+}
