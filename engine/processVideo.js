@@ -6,6 +6,8 @@ const errorHandler = require('../utils/errorHandler');
 async function processVideo(instruction) {
     let command = ffmpeg(instruction.input);
 
+    // Use GPU acceleration if available (for NVIDIA GPUs)
+    command = command.addOption('-c:v', 'h264_nvenc');
     const inputFilePath = instruction.input;
 
     let crashed = false;
