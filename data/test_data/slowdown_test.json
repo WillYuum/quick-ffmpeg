@@ -3,8 +3,9 @@
   "output": "output/slow_downed.mp4",
   "actions": [
     {
-      "type": "slowDown",
-      "with_minterpolate": true
+      "type": "slowMotion",
+      "speed": 0.5,
+      "with_minterpolate": false
     }
   ]
 }

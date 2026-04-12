@@ -1,0 +1,11 @@
+{
+  "input": "C:/Users/liams/Desktop/speed_test.mp4",
+  "output": "output/speed_changed.mp4",
+  "actions": [
+    {
+      "type": "changeSpeed",
+      "speed": 5.55,
+      "with_minterpolate": false
+    }
+  ]
+}

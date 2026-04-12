@@ -5,10 +5,16 @@ const processVideo = require('../engine/processVideo');
 const fs = require('fs');
 const path = require('path');
 
-const configPath = './data/test_data/crop_bitrate_test.json';
+const configPath = process.argv[2] || './data/test_data/slowdown_test.json';
+
+if (!fs.existsSync(configPath)) {
+    console.error(`Config file not found: ${configPath}`);
+    process.exit(1);
+}
 
 systemDialog.getMultipleFiles(async (filePaths) => {
     console.log("Selected file paths:", filePaths);
+    console.log("Using config:", configPath);
 
     if (!filePaths || filePaths.length === 0) {
         console.log("No files selected.");
