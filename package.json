@@ -5,8 +5,8 @@
   "main": "",
   "scripts": {
     "vidtweak": "node ./cli/index.js",
-    "vidtweak:slowmo": "node ./cli/index.js",
-    "vidtweak:speed": "node ./cli/index.js ./data/test_data/change_speed_test.json"
+    "vidtweak:slowmo": "node ./cli/index.js --bind slowmo",
+    "vidtweak:speed": "node ./cli/index.js --bind speed"
   },
   "author": "",
   "license": "ISC",

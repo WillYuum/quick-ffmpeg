@@ -17,7 +17,25 @@
  0:00
 
 ## Slow Motion
-Use `npm run vidtweak` (or `npm run vidtweak:slowmo`) with `data/test_data/slowdown_test.json`.
+Use `npm run vidtweak` (default binder) or `npm run vidtweak:slowmo`.
+
+The CLI is binder-driven (data-oriented): action presets are mapped in `data/action_binder.json`.
+You can select a preset with `--bind <name>`.
+
+Examples:
+
+```bash
+npm run vidtweak
+npm run vidtweak:speed
+node ./cli/index.js --bind trim
+node ./cli/index.js --list-bindings
+```
+
+You can still bypass bindings with a direct config path:
+
+```bash
+node ./cli/index.js --config ./data/test_data/change_speed_test.json
+```
 
 Use the action type `slowMotion` with a `speed` value:
 
@@ -32,7 +50,7 @@ Use the action type `slowMotion` with a `speed` value:
 - Supported slow-motion range: `0.25` to `1`
 
 ## Change Video Speed
-Use `npm run vidtweak:speed` with `data/test_data/change_speed_test.json`.
+Use `npm run vidtweak:speed` or `node ./cli/index.js --bind speed`.
 
 Use the action type `changeSpeed` with a `speed` value:
 
