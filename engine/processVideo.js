@@ -6,6 +6,9 @@ const errorHandler = require('../utils/errorHandler');
 async function processVideo(instruction) {
     const actionRegistry = createActionRegistry();
     let command = ffmpeg(instruction.input);
+    const onProgress = typeof instruction.onProgress === 'function' ? instruction.onProgress : null;
+    const onCompleted = typeof instruction.onCompleted === 'function' ? instruction.onCompleted : null;
+    const onFailed = typeof instruction.onFailed === 'function' ? instruction.onFailed : null;
 
     // Use GPU acceleration if available (for NVIDIA GPUs)
     command = command.addOption('-c:v', 'h264_nvenc');
@@ -57,9 +60,14 @@ async function processVideo(instruction) {
             .output(instruction.output)
             .on('end', () => {
                 console.log('✅ Done processing.');
+                onCompleted?.({
+                    input: instruction.input,
+                    output: instruction.output,
+                });
                 resolve();
             })
             .on('progress', progress => {
+                onProgress?.(progress);
                 if (progress.percent) {
                     console.log(`📊 Progress: ${progress.percent.toFixed(2)}%`);
                 } else {
@@ -68,6 +76,7 @@ async function processVideo(instruction) {
             })
             .on('error', err => {
                 console.error('❌ FFmpeg Error:', err.message);
+                onFailed?.(err);
                 reject(err);
             })
             .run();
