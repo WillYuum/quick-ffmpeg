@@ -66,3 +66,9 @@ Use the action type `changeSpeed` with a `speed` value:
 - Decimal values are supported (example: `5.55`)
 - Audio tempo is preserved and adjusted automatically for both slower and faster playback
 - Output quality is kept close to source by reusing source video/audio bitrates when available
+
+## Adding New Actions
+See `docs/ADD_NEW_ACTION.md` for the full action authoring checklist (handler, schema, manifest, recipe, validate, run).
+
+## Running Actions Directly
+See `docs/RUN_ACTION_DIRECTLY.md` for direct execution with `--config` and `--input`, including a real example command.

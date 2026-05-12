@@ -4,7 +4,7 @@ function reduceVideoBitrate(command, action, inputFilePath) {
     return new Promise((resolve, reject) => {
         command.setFfprobePath(ffprobePath);
 
-        command.ffprobe(action.input, (err, metadata) => {
+        command.ffprobe(inputFilePath, (err, metadata) => {
             if (err) {
                 console.log('Error reading metadata:', err.message);
                 return reject(err);

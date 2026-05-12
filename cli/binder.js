@@ -3,48 +3,84 @@ const path = require('path');
 
 const binderPath = path.resolve(__dirname, '../data/action_binder.json');
 
-function readBinderFile() {
-    if (!fs.existsSync(binderPath)) {
-        throw new Error(`Binder file not found: ${binderPath}`);
+function deepMerge(baseValue, overrideValue) {
+    if (!overrideValue || typeof overrideValue !== 'object' || Array.isArray(overrideValue)) {
+        return overrideValue !== undefined ? overrideValue : baseValue;
     }
 
-    const raw = fs.readFileSync(binderPath, 'utf-8');
-    const binder = JSON.parse(raw);
-    const hasBindingsObject = binder && typeof binder.bindings === 'object';
+    const baseObject = baseValue && typeof baseValue === 'object' && !Array.isArray(baseValue) ? baseValue : {};
+    const merged = { ...baseObject };
 
-    if (!hasBindingsObject) {
-        throw new Error('Invalid binder file. Expected shape: { "default": "...", "bindings": { ... } }');
+    for (const key of Object.keys(overrideValue)) {
+        merged[key] = deepMerge(baseObject[key], overrideValue[key]);
     }
 
-    return binder;
+    return merged;
 }
 
-function getAvailableBindings() {
-    const binder = readBinderFile();
-    return Object.keys(binder.bindings);
-}
-
-function resolveConfigPath(bindingName) {
-    const binder = readBinderFile();
-    const requestedBinding = bindingName || binder.default;
-
-    if (!requestedBinding) {
-        throw new Error('No binding was provided and binder default is missing.');
+function readJson(absolutePath) {
+    if (!fs.existsSync(absolutePath)) {
+        throw new Error(`File not found: ${absolutePath}`);
     }
 
-    const relativeConfigPath = binder.bindings[requestedBinding];
-    if (!relativeConfigPath) {
-        const available = Object.keys(binder.bindings).join(', ');
-        throw new Error(`Unknown binding: ${requestedBinding}. Available bindings: ${available}`);
+    return JSON.parse(fs.readFileSync(absolutePath, 'utf-8'));
+}
+
+function readBinderFile(filePath = binderPath) {
+    return readJson(filePath);
+}
+
+function getAvailableProfiles(filePath) {
+    const binder = readBinderFile(filePath);
+    return Object.keys(binder.profiles || {});
+}
+
+function resolveProfile(options = {}) {
+    const binder = readBinderFile(options.binderFilePath);
+    const requestedProfile = options.profile || binder.defaultProfile;
+
+    if (!requestedProfile) {
+        throw new Error('No profile was provided and binder defaultProfile is missing.');
+    }
+
+    const profileConfig = binder.profiles?.[requestedProfile];
+    if (!profileConfig) {
+        const available = Object.keys(binder.profiles || {}).join(', ');
+        throw new Error(`Unknown profile: ${requestedProfile}. Available profiles: ${available}`);
+    }
+
+    const recipePath = path.resolve(profileConfig.recipe);
+    const recipe = readJson(recipePath);
+
+    let resolvedRecipe = deepMerge(recipe, profileConfig.overrides || {});
+
+    if (options.environment) {
+        const environmentConfig = binder.environments?.[options.environment];
+        if (!environmentConfig) {
+            throw new Error(`Unknown environment: ${options.environment}`);
+        }
+
+        const profileOverride = environmentConfig.profileOverrides?.[requestedProfile] || {};
+        const globalOverride = environmentConfig.globalOverrides || {};
+        resolvedRecipe = deepMerge(resolvedRecipe, globalOverride);
+        resolvedRecipe = deepMerge(resolvedRecipe, profileOverride);
+    }
+
+    if (options.cliOverrides) {
+        resolvedRecipe = deepMerge(resolvedRecipe, options.cliOverrides);
     }
 
     return {
-        binding: requestedBinding,
-        configPath: path.resolve(relativeConfigPath),
+        profile: requestedProfile,
+        recipePath,
+        recipe: resolvedRecipe,
     };
 }
 
 module.exports = {
-    getAvailableBindings,
-    resolveConfigPath,
+    binderPath,
+    deepMerge,
+    readBinderFile,
+    getAvailableProfiles,
+    resolveProfile,
 };

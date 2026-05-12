@@ -1,9 +1,10 @@
 const ffmpeg = require('fluent-ffmpeg');
 const ffmpegPath = require('ffmpeg-static');
-const actionHandlers = require('../actions');
+const { createActionRegistry } = require('../actions/registry');
 const errorHandler = require('../utils/errorHandler');
 
 async function processVideo(instruction) {
+    const actionRegistry = createActionRegistry();
     let command = ffmpeg(instruction.input);
 
     // Use GPU acceleration if available (for NVIDIA GPUs)
@@ -12,9 +13,16 @@ async function processVideo(instruction) {
 
     let crashed = false;
     for (const action of instruction.actions) {
-        // const objectValues = Object.values(instruction);
-        // console.log('Action values:', objectValues);
-        const handler = actionHandlers[action.type];
+        let normalizedAction;
+        try {
+            normalizedAction = actionRegistry.validateAction(action);
+        } catch (err) {
+            crashed = true;
+            console.error(err.message);
+            break;
+        }
+
+        const handler = actionRegistry.getHandler(action.type);
         if (!handler) {
             crashed = true;
             errorHandler.handleUnknownAction(action);
@@ -22,10 +30,10 @@ async function processVideo(instruction) {
         }
 
         try {
-            command = await handler(command, action, inputFilePath);
+            command = await handler(command, normalizedAction, inputFilePath);
         } catch (err) {
             crashed = true;
-            errorHandler.handleActionError?.(action, err);
+            errorHandler.handleActionError?.(normalizedAction, err);
             console.error(`Logging error ${err}`);
             break;
         }
